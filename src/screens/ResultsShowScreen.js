@@ -1,15 +1,52 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text, View, StyleSheet, Image, FlatList } from "react-native";
+import yelp from "../api/yelp";
 
-const ResultsShowScreen = () => {
+const ResultsShowScreen = ({ navigation }) => {
+    const id = navigation.getParam('id');
+    const[result,setResult] = useState(null);
 
+    const getResult = async (id) => {
+        const response =  await yelp.get(`/${id}`);
+        setResult(response.data);
+    };
+
+    useEffect(()=> {
+        getResult(id);
+    }, []); 
+
+    if (!result){
+        return null;
+    }
     return(
-        <View>
-            <Text>Result Screen</Text>
+        <View style = {styles.container}>
+            <Text style = {styles.title}>{result.name}</Text>
+            <Text>Contact Number: {result.phone}</Text>
+            <FlatList
+                data = {result.photos}
+                keyExtractor={(photo) => photo}
+                renderItem={({ item }) =>{
+                    return <Image style = {styles.image} source = {{ uri: item}}/>
+                }}
+            />
         </View>
     )
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    image: {
+        width: 250,
+        height: 120,
+        borderRadius: 4,
+        marginBottom: 5
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 25
+    },
+    container: {
+        margin: 8
+    }
+});
 
 export default ResultsShowScreen;

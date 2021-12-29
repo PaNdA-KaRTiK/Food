@@ -4,6 +4,7 @@ import ResultsList from "../components/ResultsList";
 import SearchBar from "../components/SearchBar";
 import useResults from "../hooks/useResults";
 
+
 const SearchScreen = () => {
     const[term, setTerm] = useState('');
     const[searchApi, results, errorMessage] = useResults();
@@ -21,8 +22,9 @@ const SearchScreen = () => {
                 onTermChange = {setTerm}
                 onTermSubmit = {() => searchApi(term)}
             />
+
             {errorMessage ? <Text>{errorMessage}</Text> : null}
-            {/* <Text>We have found {results.length} results.</Text> */}
+
             <ScrollView>
                 <ResultsList
                     results = {filterResultsByPrice('$')} 
